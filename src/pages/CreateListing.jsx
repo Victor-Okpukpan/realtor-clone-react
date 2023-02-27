@@ -109,7 +109,7 @@ export default function CreateListing() {
             </div>
             {/* Submit button */}
             <button type="submit" className="w-full px-7 py-3 bg-blue-600 text-white font-medium text-sm uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:shadow-lg focus:bg-blue-700 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out mb-6">Create List</button>
-            <button className='text-red-700'>Omor ohhh!!!</button>
+            
         </form>
     </main>
   )
