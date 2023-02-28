@@ -1,6 +1,10 @@
 import React, { useState } from 'react'
+import { toast } from 'react-toastify';
+import Spinner from '../components/Spinner';
 
 export default function CreateListing() {
+    const [ loading, setLoading ] = useState(false);
+    const [ geolocationEnabled, setGeolocationEnabled ] = useState(true);
     const [ formData, setFormData ] = useState({
         type: "rent",
         name: "",
@@ -13,20 +17,69 @@ export default function CreateListing() {
         offer: false,
         regularPrice: 0,
         discountedPrice: 0,
+        latitude: 0,
+        longitude: 0,
+        images: {}
     });
-    const { type, name, bedrooms, bathrooms, parking, furnished, address, description, offer, regularPrice, discountedPrice } = formData;
-    function onChange(){}
+    const { type, name, bedrooms, bathrooms, parking, furnished, address, description, offer, regularPrice, discountedPrice, latitude, longitude, images } = formData;
+    function onChange(e){
+        let boolean = null;
+        if(e.target.value === "true"){
+            boolean = true;
+        };
+        if(e.target.value === "false"){
+            boolean = false;
+        };
+        //files
+        if(e.target.files){
+            setFormData((prevState) => ({
+                ...prevState,
+                images: e.target.files
+            }))
+        }
+        // Boolean/Text/Numbers
+        if(!e.target.files){
+            setFormData((prevState) => ({
+                ...prevState,
+                [e.target.id]: boolean ?? e.target.value
+            }))
+        }
+    }
+
+    function onSubmit(e){
+        e.preventDefault();
+        setLoading(true);
+        if(discountedPrice >= regularPrice){
+            setLoading(false);
+            toast.error("Discounted priced needs to be smaller than the regular price!");
+            return;
+        }
+        if(images > 6){
+            setLoading(false);
+            toast.error("Maximum of 6 images are allowed!");
+            return;
+        }
+        let geolocation = {};
+        let location
+        if(geolocationEnabled){
+            
+        }
+    }
+
+    if(loading){
+        return <Spinner />
+    }
 
   return (
     <main className="px-2 max-w-md mx-auto">
         <h1 className="text-3xl text-center mt-6 font-bold">Create a Listing</h1>
-        <form >
+        <form onSubmit={onSubmit}>
             <p className="text-lg mt-6 font-semibold">Sell / Rent</p>
             <div className="flex">
                 <button type="button" id="type" value="sell" onClick={onChange} className={`mr-3 px-7 py-3 font-medium uppercase text-sm shadow-md hover:shadow-lg rounded focus:shadow-lg active:shadow-lg w-full transition duration-150 ease-in-out ${type === "rent" ? "bg-white text-black" : "bg-slate-600 text-white"}`}>
                     sell
                 </button>
-                <button type="button" id="type" value="sell" onClick={onChange} className={`ml-3 px-7 py-3 font-medium uppercase text-sm shadow-md hover:shadow-lg rounded focus:shadow-lg active:shadow-lg w-full transition duration-150 ease-in-out ${type === "sale" ? "bg-white text-black" : "bg-slate-600 text-white"}`}>
+                <button type="button" id="type" value="rent" onClick={onChange} className={`ml-3 px-7 py-3 font-medium uppercase text-sm shadow-md hover:shadow-lg rounded focus:shadow-lg active:shadow-lg w-full transition duration-150 ease-in-out ${type === "sell" ? "bg-white text-black" : "bg-slate-600 text-white"}`}>
                     rent
                 </button>
             </div>
@@ -62,6 +115,18 @@ export default function CreateListing() {
             </div>
             <p className="text-lg mt-6 font-semibold">Address</p>
             <textarea type="text" id="address" value={address} onChange={onChange} placeholder="Address" required className="w-full px-4 py-2 text-xl text-gray-700 bg-white border border-gray-300 rounded transition duration-150 ease-in-out focus:text-gray-700 focus:bg-white focus:border-slate-600 mb-6" />
+            {!geolocationEnabled && (
+                <div className="flex space-x-6 justify-start mb-6">
+                    <div>
+                        <p className="text-xl font-semibold">Latitude</p>
+                        <input type="number" id="latitude" value={latitude} onChange={onChange} required min="-90" max="90" className="w-full px-4 py-2 text-xl text-gray-700 bg-white border border-gray-300 rounded transition duration-150 ease-in-out focus:text-gray-700 focus:bg-white focus:border-slate-600 text-center" />
+                    </div>
+                    <div>
+                        <p className="text-xl font-semibold">Longitude</p>
+                        <input type="number" id="longitude" value={longitude} onChange={onChange} required min="-180" max="180" className="w-full px-4 py-2 text-xl text-gray-700 bg-white border border-gray-300 rounded transition duration-150 ease-in-out focus:text-gray-700 focus:bg-white focus:border-slate-600 text-center" />
+                    </div>
+                </div>
+            )}
             <p className="text-lg font-semibold">Description</p>
             <textarea type="text" id="description" value={description} onChange={onChange} placeholder="Description" required className="w-full px-4 py-2 text-xl text-gray-700 bg-white border border-gray-300 rounded transition duration-150 ease-in-out focus:text-gray-700 focus:bg-white focus:border-slate-600 mb-6" />
             <p className="text-lg font-semibold">Offer</p>
