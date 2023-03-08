@@ -117,6 +117,7 @@ export default function CreateListing() {
             ...formData,
             imgUrls,
             timestamp: serverTimestamp(),
+            userRef: auth.currentUser.uid
           };
           delete formDataCopy.images;
           !formDataCopy.offer && delete formDataCopy.discountedPrice;
@@ -143,7 +144,7 @@ export default function CreateListing() {
                 <button type="button" id="type" value="sale" onClick={onChange} className={`mr-3 px-7 py-3 font-medium uppercase text-sm shadow-md hover:shadow-lg rounded focus:shadow-lg active:shadow-lg w-full transition duration-150 ease-in-out ${type === "rent" ? "bg-white text-black" : "bg-slate-600 text-white"}`}>
                     sell
                 </button>
-                <button type="button" id="type" value="rent" onClick={onChange} className={`ml-3 px-7 py-3 font-medium uppercase text-sm shadow-md hover:shadow-lg rounded focus:shadow-lg active:shadow-lg w-full transition duration-150 ease-in-out ${type === "sell" ? "bg-white text-black" : "bg-slate-600 text-white"}`}>
+                <button type="button" id="type" value="rent" onClick={onChange} className={`ml-3 px-7 py-3 font-medium uppercase text-sm shadow-md hover:shadow-lg rounded focus:shadow-lg active:shadow-lg w-full transition duration-150 ease-in-out ${type === "sale" ? "bg-white text-black" : "bg-slate-600 text-white"}`}>
                     rent
                 </button>
             </div>
