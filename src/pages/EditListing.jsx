@@ -39,7 +39,7 @@ export default function CreateListing() {
             toast.error("You cannot edit this listing");
             navigate("/");
         }
-    }, [auth.currentUser.uid, listing, navigate]);
+    }, [auth.currentUser.uid, listing, navigate]); 
 
     useEffect(() => {
         setLoading(true);
